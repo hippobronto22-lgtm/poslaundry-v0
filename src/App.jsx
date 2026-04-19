@@ -141,6 +141,7 @@ export default function App() {
   // GLOBAL STATES
   const [outlets, setOutlets] = useState([]);
   const [activeOutletId, setActiveOutletId] = useState('all');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const [transactions, setTransactions] = useState([]);
   const [services, setServices] = useState([]);
@@ -403,8 +404,13 @@ export default function App() {
         .animate-bar-grow { animation: barGrow 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; transform-origin: bottom; }
       `}} />
 
+      {/* --- SIDEBAR BACKDROP (MOBILE/TABLET) --- */}
+      {isSidebarOpen && (
+        <div className="fixed inset-0 bg-slate-800/50 backdrop-blur-sm z-40 lg:hidden" onClick={() => setIsSidebarOpen(false)}></div>
+      )}
+
       {/* --- SIDEBAR --- */}
-      <aside className="w-64 fixed left-0 top-0 h-screen z-50 flex flex-col bg-white border-r border-slate-200 shadow-sm">
+      <aside className={`w-64 fixed left-0 top-0 h-screen z-50 flex flex-col bg-white border-r border-slate-200 shadow-sm transform transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
         <div className="flex flex-col gap-2 p-4 h-full">
           <div className="mb-8 px-2 mt-2">
             <h1 className="text-blue-800 font-black tracking-wider text-xl">MONIC POS</h1>
@@ -433,10 +439,14 @@ export default function App() {
       </aside>
 
       {/* --- MAIN CONTENT --- */}
-      <main className="ml-64 flex-1 flex flex-col h-screen overflow-hidden">
+      <main className="lg:ml-64 flex-1 flex flex-col h-screen overflow-hidden w-full transition-all duration-300">
         {/* Header */}
-        <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 flex justify-between items-center px-8 py-4 z-40 shrink-0">
-          <h2 className="text-xl font-bold text-slate-800">
+        <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 flex justify-between items-center px-4 md:px-8 py-4 z-30 shrink-0 gap-4">
+          <div className="flex items-center gap-3">
+            <button onClick={() => setIsSidebarOpen(true)} className="lg:hidden text-slate-800 hover:bg-slate-100 p-2 rounded-xl transition-all flex items-center justify-center -ml-2">
+              <span className="material-symbols-outlined text-[24px]">menu</span>
+            </button>
+            <h2 className="text-lg md:text-xl font-bold text-slate-800 truncate">
             {activeTab === 'dashboard' && 'Dashboard Rekapitulasi'}
             {activeTab === 'newOrder' && 'Point of Sale (Kasir)'}
             {activeTab === 'deposit' && 'Manajemen Deposit Pelanggan'}
@@ -449,6 +459,7 @@ export default function App() {
             {activeTab === 'master' && 'Master Data Settings'}
             {activeTab === 'nota' && 'Pengaturan Format Nota'}
           </h2>
+          </div>
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2 bg-slate-100 px-4 py-2 rounded-xl border border-slate-200 shadow-inner">
               <span className="material-symbols-outlined text-slate-500 text-[20px]">storefront</span>
@@ -893,11 +904,11 @@ function DashboardView({ transactions, customers, expenses, outlets }) {
       <div className="flex flex-col gap-10">
         <div>
           <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2 animate-fade-up" style={{ animationDelay: '0.3s' }}><span className="material-symbols-outlined text-blue-600">payments</span>Ringkasan Keuangan</h4>
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">{data.keuangan.map((item, idx) => <SummaryCard key={idx} item={item} fmt={formatIDR} index={idx} baseDelay={0.4} />)}</div>
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">{data.keuangan.map((item, idx) => <SummaryCard key={idx} item={item} fmt={formatIDR} index={idx} baseDelay={0.4} />)}</div>
         </div>
         <div>
           <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2 animate-fade-up" style={{ animationDelay: '0.6s' }}><span className="material-symbols-outlined text-blue-600">analytics</span>Data Transaksi & Operasional</h4>
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">{data.operasional.map((item, idx) => <SummaryCard key={idx} item={item} index={idx} baseDelay={0.7} />)}</div>
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">{data.operasional.map((item, idx) => <SummaryCard key={idx} item={item} index={idx} baseDelay={0.7} />)}</div>
         </div>
         <div>
           <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2 animate-fade-up" style={{ animationDelay: '0.9s' }}><span className="material-symbols-outlined text-blue-600">account_balance_wallet</span>Metode Pembayaran</h4>
