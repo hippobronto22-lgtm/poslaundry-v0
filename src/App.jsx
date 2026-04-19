@@ -253,6 +253,26 @@ export default function App() {
     return () => unsubscribeList.forEach(unsub => unsub());
   }, []);
 
+  const antarJemputBadgeCount = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const parseDate = (dateStr) => {
+      if (!dateStr) return null;
+      if (dateStr.includes('-')) return new Date(dateStr); // YYYY-MM-DD
+      const [d, m, y] = dateStr.split('/');
+      return new Date(y, m - 1, d);
+    };
+
+    const countActive = (items) => items.filter(item => {
+      if (item.status === 'Completed' || item.status === 'Cancelled') return false;
+      const itemDate = parseDate(item.date);
+      return itemDate && itemDate <= today;
+    }).length;
+
+    return countActive(pickups) + countActive(deliveries);
+  }, [pickups, deliveries]);
+
   useEffect(() => {
     const link = document.createElement('link');
     link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap';
@@ -424,7 +444,7 @@ export default function App() {
             <NavItem icon="money_off" label="Pengeluaran" isActive={activeTab === 'pengeluaran'} onClick={() => setActiveTab('pengeluaran')} />
             {currentUser.role !== 'Kasir' && <NavItem icon="assessment" label="Laporan Keuangan" isActive={activeTab === 'laporan'} onClick={() => setActiveTab('laporan')} />}
             <NavItem icon="group" label="Data Pelanggan" isActive={activeTab === 'customers'} onClick={() => setActiveTab('customers')} />
-            <NavItem icon="moped" label="Antar Jemput" isActive={activeTab === 'antarJemput'} onClick={() => setActiveTab('antarJemput')} />
+            <NavItem icon="moped" label="Antar Jemput" isActive={activeTab === 'antarJemput'} onClick={() => setActiveTab('antarJemput')} badge={antarJemputBadgeCount} />
             {currentUser.role !== 'Kasir' && <NavItem icon="badge" label="Data Karyawan" isActive={activeTab === 'karyawan'} onClick={() => setActiveTab('karyawan')} />}
             <div className="my-2 border-t border-slate-100"></div>
             {currentUser.role !== 'Kasir' && <NavItem icon="database" label="Master Data" isActive={activeTab === 'master'} onClick={() => setActiveTab('master')} />}
