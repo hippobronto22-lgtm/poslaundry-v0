@@ -389,7 +389,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex bg-slate-50 font-['Inter'] text-slate-900 h-screen overflow-hidden selection:bg-blue-100 selection:text-blue-900">
+    <div className="flex bg-slate-50 font-['Inter'] text-slate-900 h-[100dvh] overflow-hidden selection:bg-blue-100 selection:text-blue-900">
       <style dangerouslySetInnerHTML={{ __html: `
         body { font-family: 'Inter', sans-serif; }
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
@@ -410,7 +410,7 @@ export default function App() {
       )}
 
       {/* --- SIDEBAR --- */}
-      <aside className={`w-64 fixed left-0 top-0 h-screen z-50 flex flex-col bg-white border-r border-slate-200 shadow-sm transform transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+      <aside className={`w-64 fixed left-0 top-0 h-[100dvh] z-50 flex flex-col bg-white border-r border-slate-200 shadow-sm transform transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
         <div className="flex flex-col gap-2 p-4 h-full">
           <div className="mb-8 px-2 mt-2">
             <h1 className="text-blue-800 font-black tracking-wider text-xl">MONIC POS</h1>
@@ -429,17 +429,18 @@ export default function App() {
             <div className="my-2 border-t border-slate-100"></div>
             {currentUser.role !== 'Kasir' && <NavItem icon="database" label="Master Data" isActive={activeTab === 'master'} onClick={() => setActiveTab('master')} />}
             {currentUser.role !== 'Kasir' && <NavItem icon="print" label="Format Nota" isActive={activeTab === 'nota'} onClick={() => setActiveTab('nota')} />}
-            <div className="flex-grow"></div>
-            <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 rounded-2xl text-red-500 hover:bg-red-50 transition-all font-bold text-sm">
+          </nav>
+          <div className="mt-auto pt-4 border-t border-slate-100">
+            <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-red-500 hover:bg-red-50 transition-all font-bold text-sm">
               <span className="material-symbols-outlined">logout</span>
               Keluar
             </button>
-          </nav>
+          </div>
         </div>
       </aside>
 
       {/* --- MAIN CONTENT --- */}
-      <main className="lg:ml-64 flex-1 flex flex-col h-screen overflow-hidden w-full transition-all duration-300">
+      <main className="lg:ml-64 flex-1 flex flex-col h-[100dvh] overflow-hidden w-full transition-all duration-300">
         {/* Header */}
         <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 flex justify-between items-center px-4 md:px-8 py-4 z-30 shrink-0 gap-4">
           <div className="flex items-center gap-3">
